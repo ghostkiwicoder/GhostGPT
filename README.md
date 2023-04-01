@@ -40,7 +40,7 @@ pip install openai
 
 ## Credits
 
-This project was created by Ghost (github.com/KiwiCoder0100) using Python, tkinter, and OpenAI's GPT-3.
+This project was created by Ghost (https://github.com/ghostkiwicoder/) using Python, tkinter, and OpenAI's GPT-3.
 
 License
 GhostGPT is licensed under the MIT License. See the LICENSE file for more information.
