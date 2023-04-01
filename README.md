@@ -40,8 +40,7 @@ pip install openai
 
 ## Credits
 
-This project was created by Ghost (github.com/KiwiCoder0100) using Python, tkinter, and OpenAI's GPT-3.GhostGPT👻
-GhostGPT is a chat application that uses OpenAI's powerful GPT-3 language model to provide intelligent and engaging responses to your input. Whether you prefer to type or speak, GhostGPT has you covered!
+This project was created by Ghost (github.com/KiwiCoder0100) using Python, tkinter, and OpenAI's GPT-3.
 
 License
 GhostGPT is licensed under the MIT License. See the LICENSE file for more information.
