@@ -1,16 +1,21 @@
 # GhostGPT
 Talk to ChatGPT using your voice, and have it respond back to you in text to speech. Now you can talk to the super smart AI. This is a simple chat application that utilizes OpenAI's GPT-3 language model to respond to user input. The app allows users to chat with GPT3 using voice input, or text based input
 
-## Requirements
-Python 3.6 or later
-tkinter
-speech_recognition
-pyttsx3
-openai
 
 ## Installation
 
+Open CMD and install these
+
+```python
+pip install speechrecognition
+pip install pyttsx3
+pip install openai
+
+```
+
 Download EXE version in releases section.
+Or CD to the folder where files are and run "python ghostgpt.py"
+
 
 ## How to Use
 
