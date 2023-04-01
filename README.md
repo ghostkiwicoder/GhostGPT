@@ -25,4 +25,5 @@ You can clear the chat history by clicking the "Clear" button
 ## Credits
 
 This project was created by Ghost (github.com/KiwiCoder0100) using Python, tkinter, and OpenAI's GPT-3.
+
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
