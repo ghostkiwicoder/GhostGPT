@@ -26,6 +26,7 @@ pip install openai
 ```
 
 - Download EXE version in releases section.
+https://github.com/ghostkiwicoder/GhostGPT/releases/tag/exe
 - Or CD to the folder where files are and run "python ghostgpt.py"
 
 
