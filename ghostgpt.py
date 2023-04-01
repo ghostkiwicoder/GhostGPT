@@ -8,7 +8,7 @@ from tkinter import filedialog
 import webbrowser
 
 def open_github_link(event):
-    webbrowser.open("https://github.com/KiwiCoder0100")
+    webbrowser.open("https://github.com/ghostkiwicoder")
 
 def create_and_open_api_key_file():
     api_key_file = "apikey.txt"
@@ -39,7 +39,7 @@ def export_chat():
 
 def talk_to_gpt(prompt):
     response = openai.Completion.create(
-        engine="text-davinci-002",
+        engine="text-davinci-003",
         prompt=prompt,
         max_tokens=100,
         n=1,
@@ -124,7 +124,7 @@ api_key_status.grid(row=4, column=0, padx=5, pady=5)
 version_label = tk.Label(root, text="GhostGPT by Ghost v.1.0.0", fg="red", bg="black", font=("Helvetica", 13, "italic"))
 version_label.grid(row=5, column=0, padx=5, pady=0)
 
-github_link = tk.Label(root, text="github.com/KiwiCoder0100", fg="cyan", cursor="hand2", bg="black", font=("Helvetica", 11, "italic"))
+github_link = tk.Label(root, text="github.com/ghostkiwicoder", fg="cyan", cursor="hand2", bg="black", font=("Helvetica", 11, "italic"))
 github_link.grid(row=6, column=0, padx=5, pady=0)
 github_link.bind("<Button-1>", open_github_link)
 
