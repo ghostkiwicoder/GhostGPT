@@ -4,7 +4,6 @@ Talk to ChatGPT using your voice, and have it respond back to you in text to spe
 ## How to Use
 
 - Get an API key from OpenAI and save it to a file named apikey.txt in the project directory
-- Run python main.py to launch the chat application
 - Type in your message in the entry field and click the "Send" button to get a response from GPT
 - Alternatively, you can click the "Start Talking" button to use your voice, when you've stopped talking it'll take what you said and input it into ChatGPT
 - You can export the chat history to a text file by clicking the "Export Chat" button
