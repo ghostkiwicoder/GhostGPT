@@ -5,6 +5,7 @@ import speech_recognition as sr
 import azure.cognitiveservices.speech as speechsdk
 import openai
 import os
+import threading
 import webbrowser
 import xml.etree.ElementTree as ET
 from azure.cognitiveservices.speech import SpeechConfig, SpeechSynthesizer, AudioConfig
@@ -62,15 +63,16 @@ def export_chat():
 
 
 def talk_to_gpt(prompt):
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=100,
-        n=1,
-        stop=None,
-        temperature=0.5,
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are an adept assistant, programmed to deliver the most accurate and relevant responses to any user prompt."},
+            {"role": "user", "content": prompt}
+        ],
     )
-    return response.choices[0].text.strip()
+    return response['choices'][0]['message']['content']
+
+
 
 
 def send_message():
@@ -94,19 +96,26 @@ def send_message():
 
 
 def listen_to_user():
-    start_button.config(text="Listening...")
-    recognizer = sr.Recognizer()
-    with sr.Microphone() as source:
-        audio = recognizer.listen(source)
-    try:
-        user_text = recognizer.recognize_google(audio)
-        entry.delete(0, "end")
-        entry.insert(0, user_text)
-        send_message()
-    except sr.UnknownValueError:
-        entry.delete(0, "end")
-        entry.insert(0, "Voice not recognized.")
-    start_button.config(text="Start Talking")
+    def threaded_listen():
+        if start_button["text"] == "Start Listening":
+            start_button.config(text="Stop Listening")
+            recognizer = sr.Recognizer()
+            with sr.Microphone() as source:
+                audio = recognizer.listen(source, phrase_time_limit=5, timeout=5)
+            try:
+                user_text = recognizer.recognize_google(audio)
+                entry.delete(0, "end")
+                entry.insert(0, user_text)
+                send_message()
+            except sr.UnknownValueError:
+                entry.delete(0, "end")
+                entry.insert(0, "Voice not recognized.")
+            start_button.config(text="Start Listening")
+        else:
+            start_button.config(text="Start Listening")
+
+    threading.Thread(target=threaded_listen).start()
+
 
 
 def clear_chat():
@@ -140,7 +149,8 @@ def load_voices(api_key, region):
     voice_names = [voice.name for voice in voices_result.voices]
 
     voice_combobox["values"] = voice_names
-    voice_combobox.current(0)
+    default_voice_index = voice_names.index("Microsoft Server Speech Text to Speech Voice (en-US, SaraNeural)")
+    voice_combobox.current(default_voice_index)  # set the default voice to Sara
 
 
 root = tk.Tk()
