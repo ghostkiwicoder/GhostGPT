@@ -66,12 +66,11 @@ def talk_to_gpt(prompt):
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
-            {"role": "system", "content": "You are an adept assistant, programmed to deliver the most accurate and relevant responses to any user prompt."},
+            {"role": "system", "content": "You are an adept assistant, programmed to deliver the most accurate and relevant responses to any user prompt. Make sure responce is no more than 100 words"},
             {"role": "user", "content": prompt}
         ],
     )
     return response['choices'][0]['message']['content']
-
 
 
 
@@ -92,7 +91,42 @@ def send_message():
     chat_log.see("end")
     chat_log.config(state="disabled")
     print(response)
-    speak(response)
+    threading.Thread(target=speak, args=(response,)).start()
+
+
+# global flag for stopping speech
+stop_speech = False
+
+def speak(text):
+    global stop_speech
+    stop_speech = False
+
+    tree = ET.parse("apikey.xml")
+    root = tree.getroot()
+
+    azure_api_key = root.find("azure_api_key").text.strip()
+    azure_region = root.find("azure_region").text.strip()
+
+    speech_config = SpeechConfig(subscription=azure_api_key, region=azure_region)
+    speech_config.speech_synthesis_voice_name = voice_combobox.get()
+
+    audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)
+    synthesizer = SpeechSynthesizer(speech_config=speech_config, audio_config=audio_config)
+
+    # split text into chunks
+    words = text.split()
+    chunks = [' '.join(words[i:i + 20]) for i in range(0, len(words), 20)]
+
+    for chunk in chunks:
+        if stop_speech:
+            break
+        synthesizer.speak_text_async(chunk).get()
+
+def stop_talking():
+    global stop_speech
+    stop_speech = True
+
+
 
 
 def listen_to_user():
@@ -115,29 +149,12 @@ def listen_to_user():
             start_button.config(text="Start Listening")
 
     threading.Thread(target=threaded_listen).start()
-
-
-
+    
+    
 def clear_chat():
     chat_log.config(state="normal")
     chat_log.delete(1.0, "end")
     chat_log.config(state="disabled")
-
-
-def speak(text):
-    tree = ET.parse("apikey.xml")
-    root = tree.getroot()
-
-    azure_api_key = root.find("azure_api_key").text.strip()
-    azure_region = root.find("azure_region").text.strip()
-
-    speech_config = SpeechConfig(subscription=azure_api_key, region=azure_region)
-    speech_config.speech_synthesis_voice_name = voice_combobox.get()
-
-    audio_config = speechsdk.audio.AudioConfig(use_default_microphone=True)  
-    synthesizer = SpeechSynthesizer(speech_config=speech_config, audio_config=audio_config)
-
-    synthesizer.speak_text_async(text).get()
 
 
 
@@ -183,6 +200,10 @@ api_key_button.grid(row=3, column=1, padx=5, pady=5)
 
 refresh_button = tk.Button(root, text="Refresh Voices", command=lambda: check_api_key_file(), bg="black", fg="white", width=12)
 refresh_button.grid(row=4, column=1, padx=5, pady=5)
+
+stop_button = tk.Button(root, text="Stop", command=stop_talking, bg="black", fg="white")
+stop_button.grid(row=5, column=1, padx=5, pady=5, sticky='we')
+
 
 api_key_status = tk.Label(root, text="", bg="black")
 api_key_status.grid(row=4, column=0, padx=5, pady=5)
